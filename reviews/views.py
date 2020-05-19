@@ -2,15 +2,16 @@ import re
 
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.http import Http404
 from django.shortcuts import get_object_or_404, render
-from django.contrib.admin.views.decorators import staff_member_required
 
 from .forms import ReviewForm
 from .models import Doctor, Fword, Review
 
 
-@staff_member_required
 def show_reviews(request):
+    if not request.user.is_staff:
+        raise Http404
     review_list = Review.objects.select_related(
         'author').order_by("dt_created")
     f_words = [f.word for f in Fword.objects.all()]
@@ -19,7 +20,8 @@ def show_reviews(request):
             pattern = re.compile(re.escape(word), re.IGNORECASE)
             if re.search(pattern, review.formatted_text):
                 formatted_list = (
-                    word.replace(word, f'<span style="color: red;">{word}</span>')
+                    word.replace(
+                        word, f'<span style="color: red;">{word}</span>')
                     if re.search(pattern, word)
                     else word
                     for word in review.formatted_text.split())
