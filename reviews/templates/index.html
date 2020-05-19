@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Все отзывы</title>
+    </head>
+    <body>
+        <h1>Все отзывы</h1>
+        {% for review in page %}
+        <h3>
+                Автор: {{ review.author.username }}
+                <br>
+                Врач: {{ review.doctor.get_full_name }}
+        </h3>
+        <p>     {{ review.formatted_text| safe  }}</p>
+        <h4>
+                Дата публикации: {{ review.dt_created|date:"d.m.Y" }}
+        </h4>
+        <hr>
+        {% endfor %}
+        {% if page.has_other_pages %}
+                {% include "paginator.html" with items=page paginator=paginator%}
+        {% endif %}
+    </body>
+</html>

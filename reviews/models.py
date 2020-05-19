@@ -28,8 +28,12 @@ class Doctor(models.Model):
         verbose_name = "Врача"
         verbose_name_plural = "Врачи"
 
+    @property
+    def get_full_name(self):
+        return f'{self.last_name} {self.first_name} {self.patronymic}'
+
     def __str__(self):
-        return self.last_name + ' ' + self.first_name + ' ' + self.patronymic
+        return f'{self.last_name} {self.first_name} {self.patronymic}'
 
 
 class Review(models.Model):

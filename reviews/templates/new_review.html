@@ -1,14 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1>Оставить отзыв</h1>
-    <h2>{{ doctor.first_name }} {{ doctor.last_name }} {{ doctor.patronymic }}</h2>
-    <h2>   {{ specs }} </h2>
+    <hr>
+    <h3>{{ doctor.first_name }} {{ doctor.last_name }} {{ doctor.patronymic }}</h3>
+    <h4> {{ specs }}</h4>
     <form method="POST" class="post-form">
         {% csrf_token %}
         {{ form.as_p }}
-        {% for field in form %}
-            {{ field }}
-        {% endfor %}
         <button type="submit" class="save btn btn-default">Отправить отзыв</button>
     </form>
 
