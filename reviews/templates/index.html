@@ -9,7 +9,12 @@
         <h1>Все отзывы</h1>
         {% for review in page %}
         <h3>
-                Автор: {{ review.author.username }}
+                Автор: 
+                {% if review.author == None %}
+                Аноним
+                {% else %}
+                {{ review.author.username }}
+                {% endif %}
                 <br>
                 Врач: {{ review.doctor.get_full_name }}
         </h3>

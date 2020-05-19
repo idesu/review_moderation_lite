@@ -1,20 +1,27 @@
+import re
+
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
-import re
 
 from .forms import ReviewForm
-from .models import Doctor, Review, Fword
+from .models import Doctor, Fword, Review
 
 
 def show_reviews(request):
-    review_list = Review.objects.select_related('author').order_by("dt_created")
+    review_list = Review.objects.select_related(
+        'author').order_by("dt_created")
     f_words = [f.word for f in Fword.objects.all()]
     for review in review_list:
         for word in f_words:
             pattern = re.compile(re.escape(word), re.IGNORECASE)
             if re.search(pattern, review.formatted_text):
-                review.formatted_text = pattern.sub(f'<span style="color: red;">{word}</span>', review.formatted_text)
+                formatted_list = (
+                    word.replace(word, f'<span style="color: red;">{word}</span>')
+                    if re.search(pattern, word)
+                    else word
+                    for word in review.formatted_text.split())
+                review.formatted_text = ' '.join(formatted_list)
     paginator = Paginator(review_list, 10)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -23,6 +30,7 @@ def show_reviews(request):
         "index.html",
         {'page': page, 'paginator': paginator}
     )
+
 
 def new_review(request, doctor_id):
     doctor = get_object_or_404(Doctor, id=doctor_id)
