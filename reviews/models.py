@@ -32,6 +32,10 @@ class Doctor(models.Model):
     def get_full_name(self):
         return f'{self.last_name} {self.first_name} {self.patronymic}'
 
+    @property
+    def get_spec(self):
+        return ', '.join(spec.title for spec in self.spec.all())
+
     def __str__(self):
         return f'{self.last_name} {self.first_name} {self.patronymic}'
 

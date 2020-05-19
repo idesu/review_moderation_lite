@@ -3,7 +3,7 @@
     <h1>Оставить отзыв</h1>
     <hr>
     <h3>{{ doctor.first_name }} {{ doctor.last_name }} {{ doctor.patronymic }}</h3>
-    <h4> {{ specs }}</h4>
+    <h4> {{ doctor.get_spec }}</h4>
     <form method="POST" class="post-form">
         {% csrf_token %}
         {{ form.as_p }}

@@ -1,4 +1,5 @@
 import re
+import string
 
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -6,7 +7,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
 from .forms import ReviewForm
-from .models import Doctor, Fword, Review
+from .models import Doctor, Review, Fword, ExceptionWord
 
 
 def show_reviews(request):
@@ -15,14 +16,17 @@ def show_reviews(request):
     review_list = Review.objects.select_related(
         'author').order_by("dt_created")
     f_words = [f.word for f in Fword.objects.all()]
+    exceptions = [e.word.lower() for e in ExceptionWord.objects.all()]
     for review in review_list:
-        for word in f_words:
-            pattern = re.compile(re.escape(word), re.IGNORECASE)
+        for f_word in f_words:
+            pattern = re.compile(re.escape(f_word), re.IGNORECASE)
             if re.search(pattern, review.formatted_text):
                 formatted_list = (
                     word.replace(
                         word, f'<span style="color: red;">{word}</span>')
                     if re.search(pattern, word)
+                    and not word.lower().translate(
+                        str.maketrans('', '', string.punctuation)) in exceptions
                     else word
                     for word in review.formatted_text.split())
                 review.formatted_text = ' '.join(formatted_list)
@@ -38,7 +42,6 @@ def show_reviews(request):
 
 def new_review(request, doctor_id):
     doctor = get_object_or_404(Doctor, id=doctor_id)
-    specs = ', '.join(spec.title for spec in doctor.spec.all())
     if request.method == 'POST':
         instance = Review(doctor=doctor)
         if not request.user.is_anonymous:
@@ -56,8 +59,7 @@ def new_review(request, doctor_id):
             messages.success(request, 'Отзыв успешно отправлен')
         return render(request, 'new_review.html', {
             'doctor': doctor,
-            'specs': specs,
             'form': form, })
 
     form = ReviewForm()
-    return render(request, 'new_review.html', {'doctor': doctor, 'specs': specs, 'form': form, })
+    return render(request, 'new_review.html', {'doctor': doctor, 'form': form, })
