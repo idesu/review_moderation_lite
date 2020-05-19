@@ -3,11 +3,13 @@ import re
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
+from django.contrib.admin.views.decorators import staff_member_required
 
 from .forms import ReviewForm
 from .models import Doctor, Fword, Review
 
 
+@staff_member_required
 def show_reviews(request):
     review_list = Review.objects.select_related(
         'author').order_by("dt_created")
