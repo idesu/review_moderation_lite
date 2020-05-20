@@ -4,7 +4,7 @@
     <hr>
     <h3>{{ doctor.first_name }} {{ doctor.last_name }} {{ doctor.patronymic }}</h3>
     <h4> {{ doctor.get_spec }}</h4>
-    <form method="POST" class="post-form">
+    <form action="{% url 'new_review' doctor.id %}" method="POST" class="post-form">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="save btn btn-default">Отправить отзыв</button>
