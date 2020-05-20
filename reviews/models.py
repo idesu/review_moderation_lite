@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 import re
 
 from django.contrib.auth import get_user_model
+from django.shortcuts import reverse
 from django.db import models
 
 User = get_user_model()
@@ -35,6 +37,9 @@ class Doctor(models.Model):
     @property
     def get_spec(self):
         return ", ".join(spec.title for spec in self.spec.all())
+
+    def get_absolute_url(self):
+        return reverse('new_review', args=[str(self.id)])
 
     def __str__(self):
         return f"{self.last_name} {self.first_name} {self.patronymic}"
@@ -85,6 +90,10 @@ class Fword(models.Model):
     class Meta:
         verbose_name = "Ругательство"
         verbose_name_plural = "Ругательства"
+    
+    def save(self, *args, **kwargs):
+        self.word = self.word.lower()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.word

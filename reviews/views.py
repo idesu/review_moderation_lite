@@ -2,6 +2,7 @@ import re
 import string
 
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
@@ -10,6 +11,7 @@ from .forms import ReviewForm
 from .models import Doctor, ExceptionWord, Fword, Review
 
 
+@staff_member_required
 def show_reviews(request):
     def check_in_exceptions(word, exceptions):
         return (
@@ -25,8 +27,6 @@ def show_reviews(request):
             return word.replace(word, f'<span style="color: red;">{word}</span>')
         return word
 
-    if not request.user.is_staff:
-        raise Http404
     review_list = Review.objects.select_related("author", "doctor").order_by(
         "dt_created"
     )
