@@ -1,29 +1,20 @@
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
-
-from reviews.models import Doctor, ExceptionWord, Fword
+from . import factories
 
 User = get_user_model()
+from reviews.models import Doctor, ExceptionWord, Fword
 
 
 class TestReviewPages(TestCase):
     def setUp(self):
         self.regular_сlient = Client()
         self.staff_client = Client()
-        self.staff_user = User.objects.create(
-            username="staff_test",
-            email="alice@spam.eggs",
-            password="superpassword",
-            is_staff=True,
-        )
-        self.regular_user = User.objects.create(
-            username="test", email="alice@spam.eggs", password="superpassword"
-        )
+        self.staff_user = factories.UserFactory(username='staff_test', is_staff=True)
+        self.regular_user = factories.UserFactory(username='test')
         self.fword = Fword.objects.create(word="БЛять")
         self.exception_word = ExceptionWord.objects.create(word="оскорблять")
-        self.doctor = Doctor.objects.create(
-            first_name="Ай", last_name="Болит", patronymic="Вениаминович"
-        )
+        self.doctor = factories.DoctorFactory(first_name="Ай", last_name="Болит", patronymic="Вениаминович")
         self.specialty = self.doctor.spec.create(title="Therapist")
 
     def test_review_list_page(self):
