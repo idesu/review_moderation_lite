@@ -24,7 +24,7 @@ def show_reviews(request):
             return word.replace(word, f'<span style="color: red;">{word}</span>')
         return word
 
-    review_list = Review.objects.select_related("author", "doctor").order_by(
+    review_list = Review.objects.select_related("author").prefetch_related("doctor__spec").order_by(
         "dt_created"
     )
     f_words = [f.word for f in Fword.objects.all()]
