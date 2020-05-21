@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "debug_toolbar",
+    "django_rq",
 ]
 
 MIDDLEWARE = [
@@ -115,6 +116,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 TEST = {
     'CHARSET': 'utf-8'
+}
+
+RQ_QUEUES = {
+    'default': {
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 360,
+    },
 }
 
 # Internationalization

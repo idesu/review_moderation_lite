@@ -22,6 +22,10 @@ urlpatterns = [
     path("", include("reviews.urls"))
 ]
 
+urlpatterns += [
+    path('django-rq/', include('django_rq.urls'))
+]
+
 if settings.DEBUG:
         import debug_toolbar
 
