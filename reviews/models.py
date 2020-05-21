@@ -62,8 +62,9 @@ class Review(models.Model):
 
     def format_text(self):
         clean_repeated_puncts = re.sub(r"([.\?#,<>%~`!$:;])\1+", r"\1", self.text)
-        fix_spaces = re.sub(" +", " ", clean_repeated_puncts)
-        formatted_text = re.sub(r'\s([?.!"](?:\s|$))', r"\1", fix_spaces)
+        fix_spaces = re.sub(" +", " ", clean_repeated_puncts.strip())
+        fix_spaces = re.sub(r'\s+([.\?#,<>%~`!$:;])', '\g<1>', fix_spaces)
+        formatted_text = re.sub(r'\s([?.!"](?:\s|$))', r'\1', fix_spaces)
         # capitalize text if finded >6 uppercase chars in a row
         if re.search(r"([A-ZА-Я]{6})", formatted_text):
             formatted_text = re.sub(

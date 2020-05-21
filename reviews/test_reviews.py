@@ -56,14 +56,11 @@ class TestReviewPages(TestCase):
                 tempus lacus, ut ultricies sapien ipsum eu turpis. Sed.  """
             },
         )
-        self.assertContains(self.staff_client.get("/reviews/"), "Автор: staff_test")
+        response = self.staff_client.get("/reviews/")
+        self.assertContains(response, "Автор: staff_test")
+        self.assertContains(response, "Врач: Болит Ай Вениаминович")
+        self.assertContains(response, "Специальность: Therapist")
         self.assertContains(
-            self.staff_client.get("/reviews/"), "Врач: Болит Ай Вениаминович"
-        )
-        self.assertContains(
-            self.staff_client.get("/reviews/"), "Специальность: Therapist"
-        )
-        self.assertContains(
-            self.staff_client.get("/reviews/"),
+            response,
             'Lorem ipsum <span style="color: red;">ууублять!</span> Dolor, оскорблять. Sit amet consectetur',
         )
