@@ -47,7 +47,7 @@ class TestReviewPages(TestCase):
                 "text": """   LOREM  IPSUM УУУБЛЯТЬ!!!!!!  Dolor, ОсКоРбЛяТь. sit
                 amet consectetur adipiscing elit. Donec vehicula eros at leo ullamcorper accumsan.
                 Quisque facilisis, metus quis pretium commodo, nunc tellus
-                consequat dui, quis posuere mauris odio sed dui. Donec non massa 
+                consequat dui, quis posuere mauris odio sed dui. Donec non massa
                 dictum, varius est id, condimentum magna. Vestibulum varius,    metus ut blandit euismod, magna arcu malesuada
                 velit, a tristique eros dui ut tortor. Nullam turpis massa, efficitur
                 nec pretium in, ultricies eu ante. Donec non elementum magna, scelerisque

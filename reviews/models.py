@@ -91,7 +91,7 @@ class Fword(models.Model):
     class Meta:
         verbose_name = "Ругательство"
         verbose_name_plural = "Ругательства"
-    
+
     def save(self, *args, **kwargs):
         self.word = self.word.lower()
         super().save(*args, **kwargs)

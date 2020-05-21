@@ -13,17 +13,14 @@ from .models import Doctor, ExceptionWord, Fword, Review
 
 @staff_member_required
 def show_reviews(request):
-    def check_in_exceptions(word, exceptions):
-        return (
-            word.lower().translate(str.maketrans("", "", string.punctuation))
-            in exceptions
-        )
+    
+    def word_to_check(word):
+        return word.lower().translate(str.maketrans("", "", string.punctuation))
 
-    def make_case_insensibility_pattern(word):
-        return re.compile(re.escape(word), re.IGNORECASE)
-
-    def highlight_f_words(word, exceptions):
-        if re.search(pattern, word) and not check_in_exceptions(word, exceptions):
+    def highlight_f_words(word, f_words, exceptions):
+        if (
+            word_to_check(word).startswith(f_word) or word_to_check(word).endswith(f_word)
+        ) and not word_to_check(word) in exceptions:
             return word.replace(word, f'<span style="color: red;">{word}</span>')
         return word
 
@@ -34,10 +31,9 @@ def show_reviews(request):
     exceptions = [e.word.lower() for e in ExceptionWord.objects.all()]
     for review in review_list:
         for f_word in f_words:
-            pattern = make_case_insensibility_pattern(f_word)
-            if re.search(pattern, review.formatted_text):
+            if review.formatted_text.lower().find(f_word):
                 formatted_list = (
-                    highlight_f_words(word, exceptions)
+                    highlight_f_words(word, f_words, exceptions)
                     for word in review.formatted_text.split()
                 )
                 review.formatted_text = " ".join(formatted_list)
