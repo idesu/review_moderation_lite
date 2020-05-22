@@ -1,27 +1,31 @@
 import django_rq
-import os
+import logging
+from datetime import datetime, timedelta
 import time
-from datetime import datetime
-from django_rq import job
 
 
 from django.core.management.base import BaseCommand
-
+from django_rq import job
 from reviews.models import Review
 
+#@job
+def get_count_reviews():
+    logger = logging.getLogger('counter')
+    count = Review.objects.count()
+    time.sleep(4)
+    if count:
+        logger.info(f'Всего отзывов в системе: {count}')
+    else:
+        logger.error('Something went wrong!')
 
 class Command(BaseCommand):
     help = "Выводит на экран и в лог количество записей в таблице Review"
 
     def handle(self, *args, **options):
-        count = django_rq.enqueue(Review.objects.count)
-        time.sleep(4)
-        self.stdout.write(
-            self.style.SUCCESS(
-                f'{str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))} Всего отзывов в системе: {count.result}'
-            )
+        scheduler = django_rq.get_scheduler('default')
+        scheduler.schedule(
+            scheduled_time=datetime.now(), 
+            func=get_count_reviews,
+            interval=10,
+            repeat=4,
         )
-        with open(f"count.log", "a") as f:
-            f.write(
-                f'{str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))} Всего отзывов в системе: {count.result}\n'
-            )

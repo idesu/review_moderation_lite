@@ -3,6 +3,7 @@ attrs==19.3.0
 autopep8==1.5.2
 black==19.10b0
 click==7.1.2
+croniter==0.3.31
 Django==2.2
 django-debug-toolbar==2.2
 django-rq==2.3.2
@@ -22,6 +23,7 @@ pytz==2020.1
 redis==3.5.2
 regex==2020.5.14
 rq==1.4.1
+rq-scheduler==0.10.0
 six==1.14.0
 sqlparse==0.3.1
 text-unidecode==1.3

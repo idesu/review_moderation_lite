@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "debug_toolbar",
     "django_rq",
+    "scheduler",
 ]
 
 MIDDLEWARE = [
@@ -124,6 +125,45 @@ RQ_QUEUES = {
         'PORT': 6379,
         'DB': 0,
         'DEFAULT_TIMEOUT': 360,
+    },
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+        'custom': {
+            'format': '{asctime} {message}',
+            'datefmt' : '%Y-%m-%d %H:%M:%S',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': (os.path.join(BASE_DIR, 'debug.log')),
+            'formatter': 'custom',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'custom',
+        },
+    },
+    'loggers': {
+        'counter': {
+            'handlers': ['file', 'console',],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     },
 }
 
